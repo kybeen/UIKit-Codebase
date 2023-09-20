@@ -8,6 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var firstLabel = UILabel()
     
     private let tableView = UITableView()
 
@@ -15,20 +16,30 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        /// view : 현재 뷰 컨트롤러가 관리하는 뷰
+        self.view.backgroundColor = .white
+        
+        self.navigationItem.title = "FirstViewController"
+        let rightButton = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(pressButton(_:)))
+        navigationItem.rightBarButtonItem = rightButton
         setLabel()
     }
     
+    // MARK: - 뷰 세팅
     func setLabel() {
-        let rootLabel = UILabel()
-        /// view : 현재 뷰 컨트롤러가 관리하는 뷰
-        view.backgroundColor = .white
-        view.addSubview(rootLabel) // 뷰에 Label 추가
+        view.addSubview(firstLabel) // 뷰에 Label 추가
         
-        rootLabel.text = "류트 뷰"
-        rootLabel.translatesAutoresizingMaskIntoConstraints = false
+        firstLabel.text = "류트 뷰"
+        firstLabel.translatesAutoresizingMaskIntoConstraints = false
         // 가운데 정렬
-        rootLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        rootLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        firstLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        firstLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
+    // MARK: - 네비게이션 아이템 버튼 클릭 시 동작
+    @objc func pressButton(_ sender: UIBarButtonItem) {
+        let secondView = SecondViewController()
+        self.navigationController?.pushViewController(secondView, animated: true)
     }
 }
 

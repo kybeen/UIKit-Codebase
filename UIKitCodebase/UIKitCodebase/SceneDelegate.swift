@@ -18,9 +18,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else {return}
         window = UIWindow(windowScene: windowScene) // SceneDelegate의 window 프로퍼티에 설정해줌 windowScene을 대입해줌
-        let mainViewController = ViewController()
         
-        window?.rootViewController = mainViewController // rootViewController -> Is Initial View Controller 설정
+        let mainViewController = ViewController()
+        let navigationController = UINavigationController(rootViewController: mainViewController) // 위에서 정의한 뷰 컨트롤러를 내비게이션 컨트롤러의 루트 뷰로 지정
+        
+        window?.rootViewController = navigationController // rootViewController -> Is Initial View Controller 설정
         window?.makeKeyAndVisible() // 화면에 표시
     }
 

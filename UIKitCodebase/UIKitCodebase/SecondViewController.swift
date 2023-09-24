@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SecondViewController: UIViewController {
     let secondLabel = UILabel()
@@ -18,7 +19,7 @@ class SecondViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = .orange
+        self.view.backgroundColor = .gray
         self.navigationItem.title = "SecondViewController"
         
         secondLabel.text = "로그인 결과 확인"
@@ -28,77 +29,89 @@ class SecondViewController: UIViewController {
         secondLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 190).isActive = true
         secondLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
         
-        userIdentifierLabel.text = "UserIdentifier"
+        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+        changeRequest?.commitChanges { _ in
+            let uuid = Auth.auth().currentUser?.uid ?? ""
+            let displayName = Auth.auth().currentUser?.displayName ?? ""
+            let email = Auth.auth().currentUser?.email ?? ""
+            print(displayName)
+            self.fullnameLabel.text = "환영합니다. \(displayName)님"
+            self.emailLabel.text = "email: \(email)"
+            self.userIdentifierLabel.text = "UserIdentifier: \(uuid)"
+        }
         userIdentifierLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(userIdentifierLabel)
         userIdentifierLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 220).isActive = true
         userIdentifierLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
         
-        fullnameLabel.text = "FullName"
         fullnameLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(fullnameLabel)
-        fullnameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 240).isActive = true
+        fullnameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 260).isActive = true
         fullnameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
-        
-        emailLabel.text = "Email"
+
         emailLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(emailLabel)
-        emailLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 260).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 280).isActive = true
         emailLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
         
-        userNameLabael.text = "Username"
-        userNameLabael.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(userNameLabael)
-        userNameLabael.topAnchor.constraint(equalTo: view.topAnchor, constant: 300).isActive = true
-        userNameLabael.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+//        userNameLabael.text = "Username"
+//        userNameLabael.translatesAutoresizingMaskIntoConstraints = false
+//        self.view.addSubview(userNameLabael)
+//        userNameLabael.topAnchor.constraint(equalTo: view.topAnchor, constant: 300).isActive = true
+//        userNameLabael.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+//
+//        passwordLabel.text = "Password"
+//        passwordLabel.translatesAutoresizingMaskIntoConstraints = false
+//        self.view.addSubview(passwordLabel)
+//        passwordLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 320).isActive = true
+//        passwordLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
         
-        passwordLabel.text = "Password"
-        passwordLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(passwordLabel)
-        passwordLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 320).isActive = true
-        passwordLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
-        
-        setBackButton()
+//        setBackButton()
+        signOutButton()
         setLoginResult()
     }
     
     // MARK: - 뒤로가기 버튼
-    func setBackButton() {
-        let backButton = UIButton()
+//    func setBackButton() {
+//        let backButton = UIButton()
+//
+//        backButton.setTitle("뒤로가기", for: .normal)
+//        backButton.addTarget(self, action: #selector(pressBackButton), for: .touchUpInside)
+//        backButton.translatesAutoresizingMaskIntoConstraints = false
+//
+//        self.view.addSubview(backButton)
+//        backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+//        backButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+//    }
+//    @objc func pressBackButton() {
+//        print("뒤로가기 클릭!!!")
+//        self.navigationController?.popViewController(animated: true)
+//    }
+    
+    // MARK: - 로그아웃 버튼
+    func signOutButton() {
+        let signOutButton = UIButton()
         
-        backButton.setTitle("뒤로가기", for: .normal)
-        backButton.addTarget(self, action: #selector(pressBackButton), for: .touchUpInside)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
+        signOutButton.setTitle("로그아웃", for: .normal)
+        signOutButton.setTitleColor(.red, for: .normal)
+        signOutButton.addTarget(self, action: #selector(pressSignOutButton), for: .touchUpInside)
+        signOutButton.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(backButton)
-        backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-        backButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+        self.view.addSubview(signOutButton)
+        signOutButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        signOutButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 200).isActive = true
     }
-    @objc func pressBackButton() {
-        print("뒤로가기 클릭!!!")
+    @objc func pressSignOutButton() {
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+        print("로그아웃 되었습니다!! - \(Auth.auth().currentUser)")
+        print("로그인 화면으로 되돌아갑니다!!")
         self.navigationController?.popViewController(animated: true)
     }
-    
-//    // MARK: - 텍스트 변경 버튼
-//    func setLabelChangeButton() {
-//        let labelChangeButton = UIButton()
-//
-//        labelChangeButton.setTitle("[클릭해보세요]", for: .normal)
-//        labelChangeButton.addTarget(self, action: #selector(pressLabelChangeButton), for: .touchUpInside)
-//        labelChangeButton.translatesAutoresizingMaskIntoConstraints = false
-//
-//        self.view.addSubview(labelChangeButton)
-//        labelChangeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-//        labelChangeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 200).isActive = true
-//    }
-//    @objc func pressLabelChangeButton() {
-//        print("[클릭해보세요] 클릭!!")
-//        if self.secondLabel.text == "잘하셨어요🌝" {
-//            self.secondLabel.text = "Good🌚"
-//        } else {
-//            self.secondLabel.text = "잘하셨어요🌝"
-//        }
-//    }
     
     // MARK: - 로그인 결과 세팅
     func setLoginResult() {

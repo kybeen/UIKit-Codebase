@@ -6,21 +6,17 @@
 //
 
 import UIKit
+import AuthenticationServices
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
+    
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
-        let ud = UserDefaults.standard
-        ud.set("No userIdentifier", forKey: "userIdentifier")
-        ud.set("No fullName", forKey: "fullName")
-        ud.set("No email", forKey: "email")
-        ud.set("No username", forKey: "username")
-        ud.set("No password", forKey: "password")
+        FirebaseApp.configure()
         
         return true
     }

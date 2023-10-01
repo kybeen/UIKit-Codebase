@@ -117,7 +117,7 @@ extension ViewController: ASAuthorizationControllerDelegate {
                     // Error. If error.code == .MissingOrInvalidNonce, make sure
                     // you're sending the SHA256-hashed nonce as a hex string with
                     // your request to Apple.
-                    print("로그인 에러: \(error.localizedDescription)")
+                    print("로그인 실패: \(error.localizedDescription)")
                     return
                 }
                 // User is signed in to Firebase with Apple.
@@ -206,7 +206,7 @@ extension ViewController: ASAuthorizationControllerDelegate {
 //    }
 //}
 
-// MARK: - 승인 UI 표시 관련 델리게이트 프로토콜 구현
+// MARK: - 로그인 UI 표시 관련 델리게이트 프로토콜 구현
 extension ViewController: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!

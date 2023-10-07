@@ -43,8 +43,8 @@ class ViewController: UIViewController {
     
     // MARK: - 네비게이션 아이템 버튼 클릭 시 동작
     @objc func pressButton() {
-        let secondView = SecondViewController()
-        self.navigationController?.pushViewController(secondView, animated: true)
+        let nextView = FirebaseViewController()
+        self.navigationController?.pushViewController(nextView, animated: true)
     }
     
     // MARK: - 애플 로그인 버튼
